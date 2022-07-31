@@ -1,11 +1,12 @@
-// const API_CASH_IN = 'http://private-38e18c-uzduotis.apiary-mock.com/config/cash-in';
-// const API_CASH_OUT_NATURAL = 'http://private-38e18c-uzduotis.apiary-mock.com/config/cash-out/natural';
-// const API_CASH_OUT_JURIDICAL = 'http://private-38e18c-uzduotis.apiary-mock.com/config/cash-out/juridical';
+const fetch = require('node-fetch');
 
 const services = {
-    fetchCashInRate: () => {
-        console.log('AAAA !');
-    },
+    fetchRates: async (apiURL) => {
+        const response = await fetch(apiURL);
+        const data = await response.json();
+        return data;
+        //console.log(data);
+    }
 };
 
 module.exports = services;
