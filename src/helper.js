@@ -2,14 +2,14 @@ const helper = {
 
     /**
      * returns the day number in a week through monday to sunday
-     * mon - 1, tue - 2, ...., sun - 7 
-     * @param {string} date - the input date 
+     * mon - 1, tue - 2, ...., sun - 7
+     * @param {string} date - the input date
      */
-    getWeekDay: function(date) {
+    getWeekDay: (date) => {
         const theDate = new Date(date);
-        let theWeekDay = theDate.getDay();
+        const theWeekDay = theDate.getDay();
         // Set the week start day as Monday and make Sunday no 7
-        if (theWeekDay == 0) {
+        if (theWeekDay === 0) {
             return 7;
         }
         return theWeekDay;
@@ -17,22 +17,23 @@ const helper = {
 
     /**
      * returns the day number in a week through monday to sunday
-     * mon - 1, tue - 2, ...., sun - 7 
-     * @param {string} date - the input date 
+     * mon - 1, tue - 2, ...., sun - 7
+     * @param {string} date - the input date
      */
-    getDaysBetween: function(startDate, endDate) {
+    getDaysBetween: (startDate, endDate) => {
         const diffInMs = new Date(endDate) - new Date(startDate);
-        return parseInt(diffInMs / (1000 * 60 * 60 * 24));
+        return parseInt(diffInMs / (1000 * 60 * 60 * 24), 10);
     },
 
     /**
      * returns rounded value to closest ceil cent value
      * @param {number} fee - the un rounded value
      */
-    getRoundedValue: function(fee) {
-        return (Math.ceil(fee * 100)) / 100;
-    }
+    getRoundedValue: (fee) => {
+        const tmp = Math.ceil(fee * 100);
+        return tmp / 100;
+    },
 
-}
+};
 
 module.exports = helper;

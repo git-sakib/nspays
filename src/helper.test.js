@@ -21,5 +21,5 @@ test('Days between 2016-02-15 and 2016-02-22 should be 7', () => {
 
 // Test cases for rounding cent value
 test('Rounding 0.023 to closest value should be 0.03', () => {
-    expect(helper.getRoundedValue(0.023)).toBe(0.03);
+    expect(helper.getRoundedValue(200.007)).toBe(200.01);
 });

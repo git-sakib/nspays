@@ -5,8 +5,7 @@ const services = {
         const response = await fetch(apiURL);
         const data = await response.json();
         return data;
-        //console.log(data);
-    }
+    },
 };
 
 module.exports = services;
