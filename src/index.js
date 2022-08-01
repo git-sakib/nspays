@@ -4,8 +4,8 @@ const helper = require('./helper');
 const calculate = require('./calculate');
 
 async function CalculateCommissionFees(InputData) {
-    let users = {};
-    let results = [];
+    const users = {};
+    const results = [];
     const cashinRates = await services.fetchRates(config.api.cash_in);
     const cashoutNaturalRates = await services.fetchRates(config.api.cash_out_natural);
     const cashoutLegalRates = await services.fetchRates(config.api.cash_out_legal);
@@ -36,22 +36,18 @@ async function CalculateCommissionFees(InputData) {
 
                     // Check if one week past already since last transaction
                     if (daysBetween >= 7) {
-                        users[transaction.user_id].weekTotal = 0;
+                        users[transaction.user_id].weekTotal = transaction.operation.amount;
                         users[transaction.user_id].freeOfferTaken = false;
                     } else if (users[transaction.user_id].weekDay > weekDay) {
-                        users[transaction.user_id].weekTotal = 0;
+                        users[transaction.user_id].weekTotal = transaction.operation.amount;
                         users[transaction.user_id].freeOfferTaken = false;
                     } else {
-                        users[transaction.user_id].weekTotal += transaction.operation.amount;
                         if (users[transaction.user_id].freeOfferTaken) {
                             users[transaction.user_id].weekTotal = 0;
-                        } else {
-                            if (users[transaction.user_id].weekTotal >= cashoutNaturalRates.week_limit.amount) {
-                                users[transaction.user_id].freeOfferTaken = true;
-                            } else {
-                                // do nothing
-                            }
+                        } else if (users[transaction.user_id].weekTotal >= cashoutNaturalRates.week_limit.amount) {
+                            users[transaction.user_id].freeOfferTaken = true;
                         }
+                        users[transaction.user_id].weekTotal += transaction.operation.amount;
                     }
                     // Update the values for date & weekday
                     users[transaction.user_id].weekDay = weekDay;
@@ -62,7 +58,7 @@ async function CalculateCommissionFees(InputData) {
                     users[transaction.user_id] = {
                         date: transaction.date,
                         freeOfferTaken: false,
-                        weekDay: weekDay,
+                        weekDay,
                         weekTotal: transaction.operation.amount,
                     };
                 }
@@ -87,7 +83,6 @@ async function CalculateCommissionFees(InputData) {
                 cashinRates.max.amount,
             );
         }
-
         return helper.getRoundedValue(finalFee).toFixed(2);
     }
 
