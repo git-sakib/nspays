@@ -3,7 +3,7 @@ const CalculateCommissionFees = require('./src/index');
 const services = require('./src/services');
 
 // Input from local file directly
-// const InputData = require('./input.json');
+// const InputData = require('./testdata/dataset4.json');
 
 // RUN THE MAIN APPLICATION
 const runApplication = async () => {

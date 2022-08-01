@@ -29,29 +29,32 @@ async function CalculateCommissionFees(InputData) {
                 // Check if user exists
                 if (transaction.user_id in users) {
                     // Check number of days since the last transaction
-                    const daysBetween = helper.getDaysBetween(
-                        transaction.date,
-                        users[transaction.user_id].date,
-                    );
+                    const daysBetween = helper.getDaysBetween(users[transaction.user_id].date, transaction.date);
+                    let freeOfferTakenThisWeek = users[transaction.user_id].freeOfferTaken;
+                    let totalThisWeek = users[transaction.user_id].weekTotal;
+                    const transactionAmount = transaction.operation.amount;
 
-                    // Check if one week past already since last transaction
+                    // Check if one week past already since last transaction by date difference
                     if (daysBetween >= 7) {
-                        users[transaction.user_id].weekTotal = transaction.operation.amount;
-                        users[transaction.user_id].freeOfferTaken = false;
+                        totalThisWeek = transactionAmount;
+                        freeOfferTakenThisWeek = false;
+                    // Check if this is a new week by weekday
                     } else if (users[transaction.user_id].weekDay > weekDay) {
-                        users[transaction.user_id].weekTotal = transaction.operation.amount;
-                        users[transaction.user_id].freeOfferTaken = false;
+                        totalThisWeek = transactionAmount;
+                        freeOfferTakenThisWeek = false;
+                    // This is the same week
                     } else {
-                        if (users[transaction.user_id].freeOfferTaken) {
-                            users[transaction.user_id].weekTotal = 0;
-                        } else if (users[transaction.user_id].weekTotal >= cashoutNaturalRates.week_limit.amount) {
-                            users[transaction.user_id].freeOfferTaken = true;
+                        if (totalThisWeek > cashoutNaturalRates.week_limit.amount) {
+                            freeOfferTakenThisWeek = true;
                         }
-                        users[transaction.user_id].weekTotal += transaction.operation.amount;
+                        totalThisWeek += transactionAmount;
                     }
-                    // Update the values for date & weekday
+
+                    // Update the values
+                    users[transaction.user_id].freeOfferTaken = freeOfferTakenThisWeek;
                     users[transaction.user_id].weekDay = weekDay;
                     users[transaction.user_id].date = transaction.date;
+                    users[transaction.user_id].weekTotal = totalThisWeek;
                 // If not then Create a slot for the user
                 } else {
                     // Set the values correponding to user id
@@ -83,7 +86,9 @@ async function CalculateCommissionFees(InputData) {
                 cashinRates.max.amount,
             );
         }
-        return helper.getRoundedValue(finalFee).toFixed(2);
+        const transactionFee = helper.getRoundedValue(finalFee).toFixed(2);
+        // console.log(transactionFee,users);
+        return transactionFee;
     }
 
     // --------------------------------------------------------------------

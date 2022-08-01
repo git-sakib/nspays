@@ -10,13 +10,16 @@ test('For Date 2016-01-05 the weekday should be 2', () => {
 test('For Date 2016-01-10 the weekday should be 7', () => {
     expect(helper.getWeekDay('2016-01-10')).toBe(7);
 });
-test('For Date 2016-02-15 the weekday should be 1', () => {
-    expect(helper.getWeekDay('2016-02-15')).toBe(1);
+test('For Date 2020-02-29 the weekday should be 6', () => {
+    expect(helper.getWeekDay('2020-02-29')).toBe(6);
 });
 
 // Test cases for days between two dates
 test('Days between 2016-02-15 and 2016-02-22 should be 7', () => {
     expect(helper.getDaysBetween('2016-02-15', '2016-02-22')).toBe(7);
+});
+test('Days between 2020-02-20 and 2020-02-29 should be 9', () => {
+    expect(helper.getDaysBetween('2020-02-20', '2020-02-29')).toBe(9);
 });
 
 // Test cases for rounding cent value
