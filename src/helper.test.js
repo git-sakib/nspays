@@ -18,3 +18,8 @@ test('For Date 2016-02-15 the weekday should be 1', () => {
 test('Days between 2016-02-15 and 2016-02-22 should be 7', () => {
     expect(helper.getDaysBetween('2016-02-15', '2016-02-22')).toBe(7);
 });
+
+// Test cases for rounding cent value
+test('Rounding 0.023 to closest value should be 0.03', () => {
+    expect(helper.getRoundedValue(0.023)).toBe(0.03);
+});

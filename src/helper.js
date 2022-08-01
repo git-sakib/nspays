@@ -25,6 +25,14 @@ const helper = {
         return parseInt(diffInMs / (1000 * 60 * 60 * 24));
     },
 
+    /**
+     * returns rounded value to closest ceil cent value
+     * @param {number} fee - the un rounded value
+     */
+    getRoundedValue: function(fee) {
+        return (Math.ceil(fee * 100)) / 100;
+    }
+
 }
 
 module.exports = helper;

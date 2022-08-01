@@ -1,18 +1,23 @@
 const config = require('../config');
 const services = require('./services');
 const helper = require('./helper');
-const { calculateCashInFees, calculateCashOutNaturalFees, calculateCashOutLegalFees }  = require('./calculate');
+const calculate = require('./calculate');
 
 async function RunApplication(InputData) {
 
-    let users = {};
-    let finalFee = 0;
+    var users = {};
+    var results = [];
+    const cashinRates = await services.fetchRates(config.api.cash_in);
+    const cashoutNaturalRates = await services.fetchRates(config.api.cash_out_natural);
+    const cashoutLegalRates = await services.fetchRates(config.api.cash_out_legal);
 
-    let cashinRates = await services.fetchRates(config.api.cash_in);
-    let cashoutNaturalRates = await services.fetchRates(config.api.cash_out_natural);
-    let cashoutLegalRates = await services.fetchRates(config.api.cash_out_legal);
+    /**
+     * Process A single Transaction nad returns the fee
+     * @param {Object} transaction - the transaction object from input source
+     */
+    function processTransaction(transaction){
 
-    InputData.forEach(transaction => {
+        let finalFee = 0;
 
         // --------------------------------------------------------------------
         // THIS BLOCK ACTUALLY CALCUALTES THE FEES
@@ -69,7 +74,7 @@ async function RunApplication(InputData) {
 
                 //console.log(users);
 
-                finalFee = calculateCashOutNaturalFees(
+                finalFee = calculate.calculateCashOutNaturalFees(
                     transaction.operation.amount, 
                     cashoutNaturalRates.percents, 
                     cashoutNaturalRates.week_limit.amount,
@@ -77,25 +82,38 @@ async function RunApplication(InputData) {
                     users[transaction.user_id].freeOfferTaken
                 )
             } else { // legal
-                finalFee = calculateCashOutLegalFees(
+                finalFee = calculate.calculateCashOutLegalFees(
                     transaction.operation.amount, 
                     cashoutLegalRates.percents, 
                     cashoutLegalRates.min.amount
                 )
             }
         } else { // cash in
-            finalFee = calculateCashInFees(
+            finalFee = calculate.calculateCashInFees(
                 transaction.operation.amount, 
                 cashinRates.percents, 
                 cashinRates.max.amount
             )
         }
 
-        console.log(finalFee.toFixed(2));
+        return finalFee;
 
-        //break;
+    }
+
+    // --------------------------------------------------------------------
+    // CALCULATE FEES FOR THE INPUT DATASET
+    // --------------------------------------------------------------------    
+    InputData.forEach(transaction => {
+
+        let fee = processTransaction(transaction);
+        results.push(helper.getRoundedValue(fee).toFixed(2));
 
     });
+
+    //console.log(results);
+    return results.join(',');
+    //return results;
+
 }
 
 module.exports = RunApplication;

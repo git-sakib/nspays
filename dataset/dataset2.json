@@ -1,0 +1,12 @@
+{
+  "input": [
+    {
+      "date": "2016-01-05",
+      "user_id": 1,
+      "user_type": "natural",
+      "type": "cash_in",
+      "operation": { "amount": 76, "currency": "EUR" }
+    }
+  ],
+  "output": "0.03"
+}
