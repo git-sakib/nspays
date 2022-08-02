@@ -5,27 +5,29 @@ _An experimental module for nspays_
 
 nspays requires [Node.js](https://nodejs.org/) at v14+ to run.
 
-Install the dependencies and devDependencies and start the server.
+Install all the dependencies
 ```sh
 npm install
 ```
 
 ## Running the codes
 
-Run with the code bwlow, please add an input JSON file with proper format:
+Run with the command below, with an argument containing a local file path or input json URL
 
 ```sh
 node app.js input.json
+node app.js "http://www.example.com/input.json"
+node app.js LOCAL_FILE_PATH
 ```
 
-#### ESLint Check
-
+#### ESLint Validation
+Run the command below to find any issues comparing with AirBnB Standards
 ```sh
 npm run check
 ```
 
-#### Jest Test
-
+#### Jest Test Cases
+Run the command below to run all unit and functional testcases
 ```sh
 npm test
 ```
